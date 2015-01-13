@@ -1,0 +1,1 @@
+Exercises for *Seven More Languages in Seven Weeks*. Don't cheat!
