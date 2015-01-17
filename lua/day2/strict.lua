@@ -1,5 +1,5 @@
 local mt = {
-	__index = strict_read,		
+	__index = strict_read,
 	__newindex = strict_write
 }
 treasure={}
@@ -15,7 +15,7 @@ function strict_read( table, key )
 end
 
 function strict_write( table, key, value )
-	if _private[key] then
+	if _private[key] and value ~=nil then
 		error("Duplicate key: " .. key)
 	else
 		_private[key] = value
