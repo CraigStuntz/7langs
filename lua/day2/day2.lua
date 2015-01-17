@@ -77,3 +77,26 @@ q:add(2)
 print(q:remove())
 print(q:remove())
 print(q:remove())
+
+--Hard
+
+function retry(count, body)
+	for i=1,count do
+		local cor = coroutine.create(body)
+		_, value = coroutine.resume(cor)
+		if (type(value) ~= "string") then 
+			return
+		end
+	end
+	print("Failed after "..tostring(count).." tries.")
+end
+math.randomseed(os.time())
+retry(
+	5,
+	function()
+		if math.random() > 0.2 then
+			coroutine.yield('Something bad happened')
+		end
+		print('Succeeded')
+	end
+)
