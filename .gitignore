@@ -3,6 +3,7 @@ provided/**
 *.swp
 *.cmake
 lua/day3/play
+CMakeFiles
 
 # Compiled Object files
 *.slo
