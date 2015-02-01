@@ -12,3 +12,8 @@ USE: ascii
 USE: math.ranges
 100 [1,b] 0 [ + ] reduce
 10 [1,b] [ sq ] map
+
+! Hard
+93 [ 10 /i ] [ 10 mod ] bi
+USE: math.parser
+"123" [ 1string string>number ] each
