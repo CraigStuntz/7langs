@@ -5,6 +5,7 @@ provided/**
 lua/day3/play
 CMakeFiles
 repl-temp*
+elm-stuff
 
 # Compiled Object files
 *.slo
