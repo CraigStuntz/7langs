@@ -1,7 +1,7 @@
 module LanguageHead where
 
-import Graphics.Collage exposing (..)
 import Color exposing (..)
+import Graphics.Collage exposing (..)
 import Graphics.Element exposing (Element, image, leftAligned)
 import Keyboard
 import List
