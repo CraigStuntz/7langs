@@ -1,10 +1,9 @@
-import Graphics.Element (..)
+import Graphics.Element exposing (..)
 import Signal
-import Text (asText)
-import Time (fps)
+import Time exposing (fps)
 
 addSecond _ oldSeconds = oldSeconds + 1
 
 main : Signal Element
 main =
-      Signal.map asText (Signal.foldp (addSecond) 0 (fps 1))
+      Signal.map show (Signal.foldp (addSecond) 0 (fps 1))

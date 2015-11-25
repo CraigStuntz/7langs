@@ -8,7 +8,7 @@ import List
 import List exposing ((::), all, filter, length)
 import Mouse
 import Random exposing (Seed, generate, initialSeed, int)
-import Signal exposing (Signal, (<~), (~), foldp, map, sampleOn)
+import Signal exposing (Signal, foldp, map, map3, sampleOn)
 import Text exposing (color, fromString, height, monospace)
 import Time exposing (Time, every, fps, inSeconds)
 
@@ -30,26 +30,26 @@ defaultGame = { state   = Pause,
 
 headImage : Int -> String
 headImage n =
-  if | n == 0 -> "/img/brucetate.png"
-     | n == 1 -> "/img/davethomas.png"
-     | n == 2 -> "/img/evanczaplicki.png"
-     | n == 3 -> "/img/joearmstrong.png"
-     | n == 4 -> "/img/josevalim.png"
-     | otherwise -> ""
+  if n == 0 then "/img/brucetate.png"
+    else if n == 1 then "/img/davethomas.png"
+    else if n == 2 then "/img/evanczaplicki.png"
+    else if n == 3 then "/img/joearmstrong.png"
+    else if n == 4 then "/img/josevalim.png"
+    else ""
 
 bottom = 550
 
 secsPerFrame = 1.0 / 50.0
 
 delta : Signal Float
-delta = inSeconds <~ fps 50
+delta = map inSeconds (fps 50)
 
 
 input : Signal Input
 input =
-    sampleOn delta (Input <~ Keyboard.space
-                               ~ Mouse.x
-                               ~ delta)
+    sampleOn delta (map3 Input Keyboard.space
+                                Mouse.x
+                                delta)
 
 main : Signal Element
 main = map display (gameState)
@@ -69,10 +69,10 @@ stepGamePlay {space, x, delta} ({state, heads, player, seed} as game) =
     let (rand, seed') =
         generate (int 0 4) seed
     in
-        { game | state <-  stepGameOver x heads
-               , heads <-  stepHeads heads delta x player.score rand
-               , player <- stepPlayer player x heads
-               , seed  <-  seed' }
+        { game | state =  stepGameOver x heads
+               , heads =  stepHeads heads delta x player.score rand
+               , player = stepPlayer player x heads
+               , seed  =  seed' }
 
 stepGameOver : Int -> List Head -> State
 stepGameOver x heads =
@@ -104,7 +104,7 @@ bounceHeads heads = List.map bounce heads      -- (7)
 
 bounce : Head -> Head
 bounce head =
-  { head | vy <- if head.y > bottom && head.vy > 0
+  { head | vy = if head.y > bottom && head.vy > 0
                  then -head.vy * 0.95
                  else head.vy }
 
@@ -117,14 +117,14 @@ moveHeads delta heads = List.map moveHead heads     -- (9)
 
 moveHead : Head -> Head
 moveHead ({x, y, vx, vy} as head) =
-  { head | x <- x + vx * secsPerFrame
-         , y <- y + vy * secsPerFrame
-         , vy <- vy + secsPerFrame * 400 }
+  { head | x = x + vx * secsPerFrame
+         , y = y + vy * secsPerFrame
+         , vy = vy + secsPerFrame * 400 }
 
 stepPlayer : Player -> Int -> List Head -> Player
 stepPlayer player mouseX heads =     -- (10)
-  { player | score <- stepScore player heads
-           , x <- toFloat mouseX }
+  { player | score = stepScore player heads
+           , x = toFloat mouseX }
 
 stepScore : Player -> List Head -> Int
 stepScore player heads =   -- (11)
@@ -134,14 +134,14 @@ stepScore player heads =   -- (11)
 
 stepGamePaused : Input -> Game -> Game
 stepGamePaused {space, x, delta} ({state, heads, player, seed} as game) =    -- (12)
-  { game | state <- stepState space state
-         , player <- { player |  x <- toFloat x } }
+  { game | state = stepState space state
+         , player = { player |  x = toFloat x } }
 
 stepGameFinished : Input -> Game -> Game
 stepGameFinished {space, x, delta} ({state, heads, player, seed} as game) =   -- (13)
   if space then defaultGame
-  else { game | state <- GameOver
-              , player <- { player |  x <- toFloat x } }
+  else { game | state = GameOver
+              , player = { player |  x = toFloat x } }
 
 stepState : Bool -> State -> State
 stepState space state = if space then Play else state   -- (14)
