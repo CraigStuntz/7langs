@@ -1,9 +1,8 @@
-import Graphics.Element (..)
-import Signal (Signal, map2, sampleOn)
+import Graphics.Element exposing (..)
+import Signal exposing (Signal, map2, sampleOn)
 import Mouse
-import Text (asText)
 
-mouseInfo pos down = asText (pos, down)
+mouseInfo pos down = show (pos, down)
 
 main : Signal Element
 main =

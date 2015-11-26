@@ -1,7 +1,7 @@
-import Signal (map2)
+import Signal exposing (map2)
 import Mouse
-import Text (asText)
+import Graphics.Element exposing (show, empty)
 
-mouseInfo y down = if down then asText y else plainText ""
+mouseInfo y down = if down then show y else empty
 
 main = map2 (mouseInfo) Mouse.position Mouse.isDown
